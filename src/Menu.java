@@ -6,8 +6,12 @@ public class Menu extends MouseAdapter implements Commons{
     int buttonX = 95, buttonWidth = 150, buttonHeight = 40, playY = 100, colorY = 150, quitY = 200;
     private SpaceInvaders game;
     private Handler handler;
-    public Menu(SpaceInvaders game, Handler handler){
+    private HUD hud;
+    private Spawn spawn;
+    public Menu(SpaceInvaders game, Handler handler, HUD hud, Spawn spawn){
         this.game = game;
+        this.hud = hud;
+        this.spawn = spawn;
         this.handler = handler;
     }
 
@@ -16,7 +20,7 @@ public class Menu extends MouseAdapter implements Commons{
         int my = e.getY();
         //Play Button
         if(mouseOver(mx, my, buttonX, playY, buttonWidth, buttonHeight)){
-            game.gameState = SpaceInvaders.State.Game;
+            game.setGameState(new InGameState(handler, hud, spawn));
         }
         //Quit Button
         if (mouseOver(mx, my, buttonX, quitY, buttonWidth, buttonHeight)){

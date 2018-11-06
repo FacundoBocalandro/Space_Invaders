@@ -5,8 +5,12 @@ public class Handler implements Commons{
     LinkedList<GameObject> objects = new LinkedList<GameObject>();
     LinkedList<Alien> aliens = new LinkedList<Alien>();
     Player player;
+    SpaceInvaders game;
     Spawn spawn;
     int currentLevel = 1;
+    public Handler(SpaceInvaders game){
+        this.game = game;
+    }
 
 
     public void tick(){
@@ -87,11 +91,19 @@ public class Handler implements Commons{
     }
     public void increaseLevel(){
         currentLevel ++;
+        game.increaseLevel(currentLevel);
+
     }
     public int getLives(){
         return player.getLives();
     }
     public int getScore(){
         return player.getScore();
+    }
+    public void restartObjects(){
+        objects.clear();
+        objects.add(player);
+        addAliens();
+        addShields();
     }
 }

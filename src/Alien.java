@@ -16,10 +16,10 @@ public abstract class Alien extends GameObject implements Commons{
                 speedY = 0;
                 if (x + speedX >= BOARD_WIDTH - (228 - initialX)) {
                     speedX = -1;
-                    speedY = 1;
+                    speedY = 5;
                 } else if (x + speedX <= initialX - 18) {
                     speedX = 1;
-                    speedY = 1;
+                    speedY = 5;
                 }
                 setX(x += speedX);
                 setY(y += speedY);

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 public class AlienShot extends Shot {
     int numberOfTicks;
         public AlienShot(int x, int y, Handler handler){
-        super(x, y, handler, "images/shot.png");
+        super(x, y, handler, "Space_Invaders/images/shot.png");
         setSpeedY(1);
 
     }

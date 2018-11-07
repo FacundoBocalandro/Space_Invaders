@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.image.BufferStrategy;
 
 public class SpaceInvaders extends Canvas implements Runnable, Commons{
@@ -10,29 +11,28 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
     private Spawn spawn;
     private Menu menu;
     private LevelUp levelUpScreen;
+    private EndGame endGameScreen;
+    private MouseAdapter currentMouseAdapter;
+    private Player player;
     private boolean running = false;
     Canvas window;
-    public enum State{
-        Menu,
-        Game,
-        LevelUp
-    }
-    public State gameState = State.Menu;
     public GameState state;
 
     public SpaceInvaders(){
         handler = new Handler(this);
-        handler.setPlayer(new Player(100, 280, handler));
+        player = new Player(100, 280, handler);
+        handler.setPlayer(player);
         handler.addAliens();
         handler.addShields();
         spawn = new Spawn(handler);
         handler.setSpawn(spawn);
         hud = new HUD(handler);
-        menu = new Menu(this, handler, hud, spawn);
+        menu = new Menu(this);
+        currentMouseAdapter = menu;
         state = new MenuState(menu);
-        levelUpScreen = new LevelUp(this, handler, hud, spawn);
-        this.addMouseListener(menu);
-        this.addMouseListener(levelUpScreen);
+        levelUpScreen = new LevelUp(this, handler);
+        endGameScreen = new EndGame(this);
+        this.addMouseListener(currentMouseAdapter);
         this.addKeyListener(new KeyInput(handler));
         this.addKeyListener(new KeyShotInput(handler));
 
@@ -112,8 +112,32 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
     public void setGameState(GameState state){
         this.state = state;
     }
+    public void menu(){
+        this.removeMouseListener(currentMouseAdapter);
+        currentMouseAdapter = menu;
+        this.addMouseListener(currentMouseAdapter);
+        setGameState(new MenuState(menu));
+    }
+    public void endGame(){
+        this.removeMouseListener(currentMouseAdapter);
+        currentMouseAdapter = endGameScreen;
+        this.addMouseListener(currentMouseAdapter);
+        setGameState(new EndGameState(endGameScreen));
+    }
+    public void restartGame(){
+        player = new Player(100, 280, handler);
+        handler.setPlayer(player);
+        handler.restartObjects();
+        handler.restartLevel();
+    }
+    public void inGame(){
+        setGameState(new InGameState(handler, hud, spawn));
+    }
     public void increaseLevel(int level){
-        state = new LevelUpState(levelUpScreen, level);
+        this.removeMouseListener(currentMouseAdapter);
+        currentMouseAdapter = levelUpScreen;
+        this.addMouseListener(currentMouseAdapter);
+        setGameState(new LevelUpState(levelUpScreen, level));
     }
 
     public static void main(String[] args) {

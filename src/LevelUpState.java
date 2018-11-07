@@ -11,7 +11,6 @@ public class LevelUpState implements GameState{
 
     @Override
     public void tick() {
-
     }
 
     @Override

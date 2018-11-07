@@ -8,7 +8,7 @@ public class HUD {
     public void tick(){}
     public void render(Graphics g){
         g.setColor(Color.red);
-        Font f = new Font(Font.SERIF, Font.PLAIN, 20);
+        Font f = new Font(Font.MONOSPACED, Font.PLAIN, 16);
         g.setFont(f);
         g.drawString("Lives: " + handler.getLives(),10,20);
         g.setColor(Color.green);

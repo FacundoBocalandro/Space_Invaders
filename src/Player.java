@@ -7,13 +7,14 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
 public class Player extends GameObject implements Commons{
-
-    static int lives = 3, score = 0;
+    int lives, score;
 
 
 
     public Player(int x, int y, Handler handler) {
         super(x, y, handler, "Space_Invaders/images/player.png");
+        lives = 3;
+        score = 0;
 
 
     }
@@ -28,6 +29,9 @@ public class Player extends GameObject implements Commons{
     public void getShotCollision(AlienShot shot){
         lives --;
         shot.getPlayerCollision(this);
+        if (lives == -1){
+            handler.endGame();
+        }
     }
 
 

@@ -9,7 +9,7 @@ public class MenuState implements GameState {
 
     @Override
     public void tick() {
-        menu.tick();
+
     }
 
     @Override

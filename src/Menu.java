@@ -2,17 +2,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Menu extends MouseAdapter implements Commons{
+public class Menu extends MouseAdapter implements Commons, MouseOver{
     int buttonX = 95, buttonWidth = 150, buttonHeight = 40, playY = 100, colorY = 150, quitY = 200;
     private SpaceInvaders game;
-    private Handler handler;
-    private HUD hud;
-    private Spawn spawn;
-    public Menu(SpaceInvaders game, Handler handler, HUD hud, Spawn spawn){
+    public Menu(SpaceInvaders game){
         this.game = game;
-        this.hud = hud;
-        this.spawn = spawn;
-        this.handler = handler;
     }
 
     public void mousePressed(MouseEvent e){
@@ -20,7 +14,7 @@ public class Menu extends MouseAdapter implements Commons{
         int my = e.getY();
         //Play Button
         if(mouseOver(mx, my, buttonX, playY, buttonWidth, buttonHeight)){
-            game.setGameState(new InGameState(handler, hud, spawn));
+            game.inGame();
         }
         //Quit Button
         if (mouseOver(mx, my, buttonX, quitY, buttonWidth, buttonHeight)){
@@ -29,15 +23,6 @@ public class Menu extends MouseAdapter implements Commons{
 
     }
     public void mouseReleased(MouseEvent e){}
-    private boolean mouseOver(int mx, int my, int x, int y, int width, int height){
-        if (mx > x && mx < x + width){
-            if(my > y && my < y + height){
-                return true;
-            }
-        }
-        return false;
-    }
-    public void tick(){}
     public void render(Graphics g){
         g.setFont(new Font("arial", 1, 40));
         g.setColor(Color.white);
@@ -53,8 +38,9 @@ public class Menu extends MouseAdapter implements Commons{
         g.setFont(font);
         g.setColor(Color.black);
         g.drawString("Play", 145, 130);
-        g.drawString("Color", 140, 180);
         g.drawString("Quit", 145, 230);
+        g.setFont(new Font("arial", 1, 23));
+        g.drawString("LeaderBoard", 100, 180);
 
     }
 }

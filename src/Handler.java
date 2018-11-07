@@ -49,19 +49,19 @@ public class Handler implements Commons{
     }
     public void addAliens(){
         for (int j = 0; j < 11; j++) {
-                SmallAlien alien = new SmallAlien(18 + 18*j, 40 , this);
+                SmallAlien alien = new SmallAlien(18 + 18*j, 40 , this, currentLevel);
                 addObject(alien);
 
         }
         for (int i = 1; i < 3; i++) {
             for (int j = 0; j < 11; j++) {
-                MedAlien alien = new MedAlien(18 + 18*j, 40 + 18*i, this);
+                MedAlien alien = new MedAlien(18 + 18*j, 40 + 18*i, this, currentLevel);
                 addObject(alien);
             }
         }
         for (int i = 3; i < 5; i++) {
             for (int j = 0; j < 11; j++) {
-                BigAlien alien = new BigAlien(18 + 18*j, 40 + 18*i, this);
+                BigAlien alien = new BigAlien(18 + 18*j, 40 + 18*i, this, currentLevel);
                 addObject(alien);
             }
         }
@@ -105,5 +105,11 @@ public class Handler implements Commons{
         objects.add(player);
         addAliens();
         addShields();
+    }
+    public void endGame(){
+        game.endGame();
+    }
+    public void restartLevel(){
+        currentLevel = 1;
     }
 }

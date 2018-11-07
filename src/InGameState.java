@@ -10,14 +10,12 @@ public class InGameState implements GameState {
         this.hud = hud;
         this.spawn = spawn;
     }
-
     @Override
     public void tick() {
         handler.tick();
         hud.tick();
         spawn.tick();
     }
-
     @Override
     public void render(Graphics g) {
         handler.render(g);

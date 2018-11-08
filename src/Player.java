@@ -16,7 +16,7 @@ public class Player extends GameObject implements Commons{
     int numberOfTicksWithPower;
 
     public Player(int x, int y, Handler handler) {
-        super(x, y, handler, "Space_Invaders/images/player.png");
+        super(x, y, handler, "images/player.png");
         lives = 3;
         score = 0;
         state = new NormalPlayer();

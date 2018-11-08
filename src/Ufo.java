@@ -4,7 +4,7 @@ public class Ufo extends GameObject implements Collision{
     int numberOfTicks;
     int score;
     public Ufo(int x, int y, Handler handler){
-        super(x, y, handler, "Space_Invaders/images/UFO.png");
+        super(x, y, handler, "images/UFO.png");
         setSpeedX(1);
         numberOfTicks = 0;
         score = (int)(Math.random() * 250 + 30);

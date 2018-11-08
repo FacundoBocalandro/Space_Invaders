@@ -1,18 +1,19 @@
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
     public class Ranking {
-        private String fileName = "C:\\Users\\agusd\\Desktop\\SpaceInvaders\\src\\Ranking.txt";
+        private String fileName = ".\\src\\Ranking.txt";
         private List<Score> ranking;
         private int rankingSize = 10;
         private String delimiter = "-";
 
         public Ranking() {
             ranking = new ArrayList<>(rankingSize);
-            BufferedReader Reader = null;
-            FileReader rankingReader = null;
+            BufferedReader Reader;
+            FileReader rankingReader;
             try {
                 rankingReader = new FileReader(fileName);
                 Reader = new BufferedReader(rankingReader);
@@ -34,30 +35,43 @@ import java.util.List;
                 System.out.println("File not Found");
             }
         }
+        public void render(Graphics g){
+            Ranking ranking = new Ranking();
+            List<Ranking.Score> highscores = ranking.getRanking();
+            g.setColor(Color.green);
+            g.setFont(new Font("asd",Font.PLAIN,20));
+            g.drawLine(20,20,118,20);
+            g.drawString("Highscores:",20,18);
+            g.setColor(Color.white);
+            g.setFont(new Font("a",Font.ITALIC,14));
+            for (int i = 0; i <highscores.size() ; i++) {
+                g.drawString(highscores.get(i).getName()+ "   " + highscores.get(i).getPoints(),20,15*i+35);
+            }
+        }
 
         public void addScore(Score score) {
-            if (isHighScore(score)) {
                 int points = score.getPoints();
-                FileWriter fileWriter = null;
-                BufferedWriter writer = null;
-                int temp =0;
+                String name = score.getName();
+                FileWriter fileWriter;
+                BufferedWriter writer;
 
                 try {
                     fileWriter = new FileWriter(fileName, true);
                     writer = new BufferedWriter(fileWriter);
                     writer.newLine();
-                    writer.write("asd" + "-" + "24");
+                    writer.write(name + "-" + points);
+                    deleteWorstScore();
                     writer.flush();
 
                 } catch (IOException e) {
 
                 }
-            }
+
         }
 
         public void deleteWorstScore(){
             String inputFileName = fileName;
-            String outputFileName = "F:\\Escritorio\\SpaceInvadersF\\src\\temp.txt";
+            String outputFileName = ".\\src\\temp.txt";
             String lineToRemove = ranking.get(ranking.size()-1).getName()+"-"+ranking.get(ranking.size()-1).getPoints();
 
             try {
@@ -67,7 +81,7 @@ import java.util.List;
                 try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
                      BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
 
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         if (!line.equals(lineToRemove)) {
                             writer.write(line);

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 public class PlayerShot extends Shot{
     Player player;
     public PlayerShot(int x, int y, Handler handler, Player player){
-        super(x, y, handler, "Space_Invaders/images/shot.png");
+        super(x, y, handler, "images/shot.png");
         setSpeedY(-1);
         this.player = player;
 

@@ -4,7 +4,7 @@ public class AlienShot extends Shot {
     int numberOfTicks;
     int ticksToChangeY;
         public AlienShot(int x, int y, Handler handler){
-        super(x, y, handler, "Space_Invaders/images/shot.png");
+        super(x, y, handler, "images/shot.png");
         ticksToChangeY = 8 - handler.getLevel();
         if (ticksToChangeY <= 0){
             ticksToChangeY = 1;

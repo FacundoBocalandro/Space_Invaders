@@ -14,6 +14,6 @@ public class HUD {
         g.setColor(Color.green);
         g.drawString("Score: " + handler.getScore(),110,20);
         g.setColor(Color.BLUE);
-        g.drawString("Level: " + handler.getLevel(), 220, 20);
+        g.drawString("Level: " + handler.getLevel(), 235, 20);
     }
 }

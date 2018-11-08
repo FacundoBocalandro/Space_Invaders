@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.LinkedList;
 
 public class Shield extends GameObject{
     int numberOfHits;
@@ -8,8 +9,24 @@ public class Shield extends GameObject{
         numberOfHits = 0;
     }
     public void tick(){
+        collision();
 
     }
+
+    public void collision() {
+        LinkedList<Alien> aliens = handler.getAliens();
+        for (int i = 0; i < aliens.size(); i++) {
+            Alien alien = aliens.get(i);
+            if (SpaceInvaders.collides(this, alien)){
+                this.getAlienCollision(alien);
+            }
+
+        }
+    }
+    public void getAlienCollision(Alien alien){
+        handler.endGame();
+    }
+
     public void getShotCollision(PlayerShot shot){
         shot.getShieldCollision(this);
         numberOfHits++;

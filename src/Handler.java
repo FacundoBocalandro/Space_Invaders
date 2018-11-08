@@ -8,17 +8,23 @@ public class Handler implements Commons{
     SpaceInvaders game;
     Spawn spawn;
     int currentLevel = 1;
+    int numberOfTicks;
     public Handler(SpaceInvaders game){
         this.game = game;
     }
 
 
     public void tick(){
-
+            numberOfTicks ++;
             for (int i = 0; i < objects.size(); i++) {
                 GameObject object = objects.get(i);
                 object.tick();
             }
+            if (numberOfTicks % 10000 == 0){
+                Ufo ufo = new Ufo(0, 30, this);
+                objects.add(ufo);
+            }
+
 
     }
     public void render(Graphics g){
@@ -50,25 +56,29 @@ public class Handler implements Commons{
     public void addAliens(){
         for (int j = 0; j < 11; j++) {
                 SmallAlien alien = new SmallAlien(18 + 18*j, 40 , this, currentLevel);
+                aliens.add(alien);
                 addObject(alien);
 
         }
         for (int i = 1; i < 3; i++) {
             for (int j = 0; j < 11; j++) {
                 MedAlien alien = new MedAlien(18 + 18*j, 40 + 18*i, this, currentLevel);
+                aliens.add(alien);
                 addObject(alien);
             }
         }
         for (int i = 3; i < 5; i++) {
             for (int j = 0; j < 11; j++) {
                 BigAlien alien = new BigAlien(18 + 18*j, 40 + 18*i, this, currentLevel);
+                aliens.add(alien);
                 addObject(alien);
             }
         }
 
     }
     public void addShields(){
-        int shieldsAmount = 4;
+        int shieldsAmount = 5 - currentLevel;
+        if (shieldsAmount < 0){ shieldsAmount = 0;}
         int spacing = BOARD_WIDTH/(shieldsAmount+1);
 
 
@@ -85,13 +95,17 @@ public class Handler implements Commons{
         aliens.remove(alien);
         removeObject(alien);
     }
-    public void increaseScore(int increase){
+    public void allienKilled(int increase){
         player.increaseScore(increase);
-        spawn.increaseScore(increase);
+        spawn.increaseAlliensKilled();
     }
     public void increaseLevel(){
-        currentLevel ++;
-        game.increaseLevel(currentLevel);
+        if (currentLevel == 5){
+            game.winGame();
+        }else {
+            currentLevel++;
+            game.increaseLevel(currentLevel);
+        }
 
     }
     public int getLives(){
@@ -111,5 +125,23 @@ public class Handler implements Commons{
     }
     public void restartLevel(){
         currentLevel = 1;
+    }
+
+    public void freezeAliens() {
+        for (int i = 0; i < aliens.size(); i++) {
+             aliens.get(i).setDoTick(false);
+
+        }
+    }
+
+    public void unFreezeAliens() {
+        for (int i = 0; i < aliens.size(); i++) {
+             aliens.get(i).setDoTick(true);
+
+        }
+    }
+
+    public LinkedList<Alien> getAliens() {
+        return aliens;
     }
 }

@@ -17,6 +17,7 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
     private boolean running = false;
     Canvas window;
     public GameState state;
+    private GameWon gameWonScreen;
 
     public SpaceInvaders(){
         handler = new Handler(this);
@@ -32,6 +33,7 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
         state = new MenuState(menu);
         levelUpScreen = new LevelUp(this, handler);
         endGameScreen = new EndGame(this);
+        gameWonScreen = new GameWon(this);
         this.addMouseListener(currentMouseAdapter);
         this.addKeyListener(new KeyInput(handler));
         this.addKeyListener(new KeyShotInput(handler));
@@ -125,10 +127,11 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
         setGameState(new EndGameState(endGameScreen));
     }
     public void restartGame(){
+        spawn.resetAliensKilled();
         player = new Player(100, 280, handler);
         handler.setPlayer(player);
-        handler.restartObjects();
         handler.restartLevel();
+        handler.restartObjects();
     }
     public void inGame(){
         setGameState(new InGameState(handler, hud, spawn));
@@ -144,4 +147,10 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
         new SpaceInvaders();
     }
 
+    public void winGame() {
+        this.removeMouseListener(currentMouseAdapter);
+        currentMouseAdapter = gameWonScreen;
+        this.addMouseListener(currentMouseAdapter);
+        setGameState(new GameWonState(gameWonScreen));
+    }
 }

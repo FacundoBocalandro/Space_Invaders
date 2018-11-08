@@ -2,15 +2,18 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public class PlayerShot extends Shot{
-    public PlayerShot(int x, int y, Handler handler){
+    Player player;
+    public PlayerShot(int x, int y, Handler handler, Player player){
         super(x, y, handler, "Space_Invaders/images/shot.png");
         setSpeedY(-1);
+        this.player = player;
 
     }
     public void tick(){
         setY(y += speedY);
         collision();
         if (outOfBounds()){
+            player.resetSuccesfulShots();
             handler.removeObject(this);
         }
     }
@@ -35,8 +38,15 @@ public class PlayerShot extends Shot{
         object.getShotCollision(this);
     }
     public void getAlienCollision(Alien alien){
+        player.increaseSuccesfulShots();
         handler.removeObject(this);
     }
-    public void getShieldCollision(Shield shield){ handler.removeObject(this);}
+    public void getShieldCollision(Shield shield){
+        player.resetSuccesfulShots();
+        handler.removeObject(this);}
+    public void getUfoCollision(Ufo ufo){
+        player.increaseSuccesfulShots();
+        handler.removeObject(this);
+    }
 
 }

@@ -48,7 +48,7 @@ public abstract class Alien extends GameObject implements Commons{
 
     public void shoot(){
         int randomNumber = (int)(Math.random() * 100000) + 1;
-        if (randomNumber < 8){
+        if (randomNumber < 15){
             handler.addObject(new AlienShot(x, y, handler));
         }
 

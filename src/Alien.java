@@ -4,42 +4,61 @@ public abstract class Alien extends GameObject implements Commons{
     int score;
     int numberOfTicks;
     int initialX;
-    int currentSpeedX;
+    int ticksToChangeX;
+    int currentSpeedY;
+    boolean doTick;
 
-    public Alien(int x, int y, Handler handler, String imageString, int currentSpeedX) {
+    public Alien(int x, int y, Handler handler, String imageString, int currentSpeedY) {
         super(x, y, handler, imageString);
-        this.currentSpeedX = currentSpeedX;
-        setSpeedX(currentSpeedX);
+        setSpeedX(1);
+        ticksToChangeX = 20 - (3 * handler.getLevel());
+        if (ticksToChangeX <= 0){
+            ticksToChangeX = 1;
+        }
+        this.currentSpeedY = currentSpeedY;
         initialX = x;
+        doTick = true;
     }
     public void tick(){
-            numberOfTicks++;
-            if (numberOfTicks % 10 == 0) {
-                speedY = 0;
-                if (x + speedX >= BOARD_WIDTH - (228 - initialX)) {
-                    speedX = -currentSpeedX;
-                    speedY = 1;
-                } else if (x + speedX <= initialX - 18) {
-                    speedX = currentSpeedX;
-                    speedY = 1;
+            if(doTick) {
+                numberOfTicks++;
+                if (numberOfTicks % ticksToChangeX == 0) {
+                    speedY = 0;
+                    if (x + speedX >= BOARD_WIDTH - (228 - initialX)) {
+                        speedX = -1;
+                        speedY = currentSpeedY;
+                    } else if (x + speedX <= initialX - 18) {
+                        speedX = 1;
+                        speedY = currentSpeedY;
+                    }
+                    setX(x += speedX);
+                    setY(y += speedY);
                 }
-                setX(x += speedX);
-                setY(y += speedY);
             }
-            shoot();
-
+        outOfBounds();
+        shoot();
 
     }
+
+    private void outOfBounds() {
+        if (y >= BOARD_HEIGHT){
+            handler.endGame();
+
+        }    }
+
     public void shoot(){
         int randomNumber = (int)(Math.random() * 100000) + 1;
-        if (randomNumber < 5){
+        if (randomNumber < 8){
             handler.addObject(new AlienShot(x, y, handler));
         }
 
     }
     public void getShotCollision(PlayerShot shot){
         shot.getAlienCollision(this);
-        handler.increaseScore(score);
+        handler.allienKilled(score);
         handler.removeAlien(this);
+    }
+    public void setDoTick(Boolean bool){
+        doTick = bool;
     }
 }

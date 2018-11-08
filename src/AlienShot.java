@@ -1,16 +1,20 @@
-import java.awt.*;
 import java.util.LinkedList;
 
 public class AlienShot extends Shot {
     int numberOfTicks;
+    int ticksToChangeY;
         public AlienShot(int x, int y, Handler handler){
-        super(x, y, handler, "Space_Invaders/images/shot.png");
+        super(x, y, handler, "images/shot.png");
+        ticksToChangeY = 8 - handler.getLevel();
+        if (ticksToChangeY <= 0){
+            ticksToChangeY = 1;
+        }
         setSpeedY(1);
 
     }
     public void tick(){
         numberOfTicks ++;
-        if (numberOfTicks % 5 == 0) {
+        if (numberOfTicks % (ticksToChangeY) == 0) {
             setY(y += speedY);
             collision();
             if (outOfBounds()) {

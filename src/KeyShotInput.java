@@ -13,7 +13,7 @@ public class KeyShotInput extends KeyAdapter {
         int key = e.getKeyCode();
         if(key == KeyEvent.VK_SPACE){
             if(!spacePressed) {
-                handler.addObject(new PlayerShot(handler.getPlayer().getX() + 6, handler.getPlayer().getY(), handler));
+                handler.getPlayer().shoot();
                 spacePressed = true;
             }
         }

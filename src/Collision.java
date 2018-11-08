@@ -4,4 +4,5 @@ public interface Collision {
     default void getAlienCollision(Alien alien){}
     default void getPlayerCollision(Player player){}
     default void getShieldCollision(Shield shield){}
+    default void getUfoCollision(Ufo ufo){}
 }

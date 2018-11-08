@@ -1,18 +1,22 @@
 public class Spawn {
     Handler handler;
-    int score;
+    int aliensKilled;
     public Spawn(Handler handler){
         this.handler = handler;
-        score = 0;
+        aliensKilled = 0;
     }
     public void tick(){
-        if(score >= 100){
+        if(aliensKilled >= 30){
             handler.increaseLevel();
-            score = 0;
+            aliensKilled = 0;
         }
 
     }
-    public void increaseScore(int increase){
-        score += increase;
+    public void increaseAlliensKilled(){
+        aliensKilled += 1;
     }
+    public void resetAliensKilled(){
+        aliensKilled = 0;
+    }
+
 }

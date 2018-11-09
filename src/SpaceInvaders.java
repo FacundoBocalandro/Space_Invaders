@@ -1,9 +1,10 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.image.BufferStrategy;
 
-public class SpaceInvaders extends Canvas implements Runnable, Commons{
-    int width = BOARD_WIDTH ;
+public class SpaceInvaders extends Canvas implements Runnable, Commons {
+    int width = BOARD_WIDTH;
     int height = BOARD_HEIGHT;
     private Thread thread;
     private Handler handler;
@@ -14,12 +15,14 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
     private EndGame endGameScreen;
     private MouseAdapter currentMouseAdapter;
     private Player player;
+    private HighScore highScore;
     private boolean running = false;
     Canvas window;
     public GameState state;
     private GameWon gameWonScreen;
+    private NewHighScore newHighScoreScreen;
 
-    public SpaceInvaders(){
+    public SpaceInvaders() {
         handler = new Handler(this);
         player = new Player(100, 280, handler);
         handler.setPlayer(player);
@@ -34,6 +37,9 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
         levelUpScreen = new LevelUp(this, handler);
         endGameScreen = new EndGame(this);
         gameWonScreen = new GameWon(this);
+        newHighScoreScreen = new NewHighScore(this);
+        highScore = new HighScore();
+        state = new MenuState(menu);
         this.addMouseListener(currentMouseAdapter);
         this.addKeyListener(new KeyInput(handler));
         this.addKeyListener(new KeyShotInput(handler));
@@ -43,26 +49,27 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
 
 
     }
-    public void run(){
+
+    public void run() {
         long lastTime = System.nanoTime();      //Game loop copiado de internet
         double amountOfTicks = 60.0;
         double ns = 100000000 / amountOfTicks;
         double delta = 0;
         long timer = System.currentTimeMillis();
         int frames = 0;
-        while (running){
+        while (running) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
-            while(delta >= 1){
+            while (delta >= 1) {
                 tick();
-                delta --;
+                delta--;
             }
-            if(running){
+            if (running) {
                 render();
             }
-            frames ++;
-            if (System.currentTimeMillis() - timer > 1000){
+            frames++;
+            if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("FPS: " + frames);
                 frames = 0;
@@ -72,13 +79,14 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
 
     }
 
-    private void tick(){
+    private void tick() {
         state.tick();
 
     }
-    private void render(){
+
+    private void render() {
         BufferStrategy bs = this.getBufferStrategy();
-        if(bs == null){
+        if (bs == null) {
             this.createBufferStrategy(3);
             return;
         }
@@ -92,6 +100,7 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
         g.dispose();
         bs.show();
     }
+
     public synchronized void start() {
         setFocusable(true);
         thread = new Thread(this);
@@ -99,6 +108,7 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
         running = true;
 
     }
+
     public synchronized void stop() {
         try {
             thread.join();
@@ -108,35 +118,47 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
 
     }
 
-    public static boolean collides(GameObject object1, GameObject object2){
+    public static boolean collides(GameObject object1, GameObject object2) {
         return object1.getBounds().intersects(object2.getBounds());
     }
-    public void setGameState(GameState state){
+
+    public void setGameState(GameState state) {
         this.state = state;
     }
-    public void menu(){
+
+    public void menu() {
         this.removeMouseListener(currentMouseAdapter);
         currentMouseAdapter = menu;
         this.addMouseListener(currentMouseAdapter);
         setGameState(new MenuState(menu));
     }
-    public void endGame(){
+
+    public void endGame() {
         this.removeMouseListener(currentMouseAdapter);
-        currentMouseAdapter = endGameScreen;
-        this.addMouseListener(currentMouseAdapter);
-        setGameState(new EndGameState(endGameScreen));
+        if (highScore.isHighScore(handler.getScore())) {
+            currentMouseAdapter = newHighScoreScreen;
+            this.addMouseListener(currentMouseAdapter);
+            setGameState(new NewHighScoreState(newHighScoreScreen));
+        } else {
+            currentMouseAdapter = endGameScreen;
+            this.addMouseListener(currentMouseAdapter);
+            setGameState(new EndGameState(endGameScreen));
+        }
     }
-    public void restartGame(){
+
+    public void restartGame() {
         spawn.resetAliensKilled();
         player = new Player(100, 280, handler);
         handler.setPlayer(player);
         handler.restartLevel();
         handler.restartObjects();
     }
-    public void inGame(){
+
+    public void inGame() {
         setGameState(new InGameState(handler, hud, spawn));
     }
-    public void increaseLevel(int level){
+
+    public void increaseLevel(int level) {
         this.removeMouseListener(currentMouseAdapter);
         currentMouseAdapter = levelUpScreen;
         this.addMouseListener(currentMouseAdapter);
@@ -153,4 +175,6 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons{
         this.addMouseListener(currentMouseAdapter);
         setGameState(new GameWonState(gameWonScreen));
     }
+
+
 }

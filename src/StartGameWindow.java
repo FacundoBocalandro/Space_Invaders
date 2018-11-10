@@ -1,23 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class StartGameWindow extends Canvas {
-    JFrame frame;
+public class StartGameWindow extends JFrame {
     SpaceInvaders game;
     public StartGameWindow(int width, int height, SpaceInvaders game, String title){
-        frame = new JFrame(title);
+        setPreferredSize(new Dimension(width, height));
+        setMinimumSize(new Dimension(width, height));
+        setMaximumSize(new Dimension(width, height));
+        add(game);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setVisible(true);
         this.game = game;
-
-        frame.setPreferredSize(new Dimension(width, height));
-        frame.setMinimumSize(new Dimension(width, height));
-        frame.setMaximumSize(new Dimension(width, height));
-        frame.add(game);
-        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
         game.start();
 
     }
+
 
 }

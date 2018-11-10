@@ -7,7 +7,6 @@ public class EndGameState implements GameState {
     }
     @Override
     public void tick() {
-        endGame.tick();
     }
     @Override
     public void render(Graphics g) {

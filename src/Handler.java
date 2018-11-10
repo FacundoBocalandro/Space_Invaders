@@ -9,8 +9,10 @@ public class Handler implements Commons{
     Spawn spawn;
     int currentLevel = 1;
     int numberOfTicks;
+    HighScore highScore;
     public Handler(SpaceInvaders game){
         this.game = game;
+        highScore = new HighScore();
     }
 
 
@@ -24,7 +26,6 @@ public class Handler implements Commons{
                 Ufo ufo = new Ufo(0, 30, this);
                 objects.add(ufo);
             }
-
 
     }
     public void render(Graphics g){
@@ -101,10 +102,10 @@ public class Handler implements Commons{
     }
     public void increaseLevel(){
         if (currentLevel == 5){
-            game.winGame();
+            winGame();
         }else {
             currentLevel++;
-            game.increaseLevel(currentLevel);
+            increaseLevel(currentLevel);
         }
 
     }
@@ -120,9 +121,7 @@ public class Handler implements Commons{
         addAliens();
         addShields();
     }
-    public void endGame(){
-        game.endGame();
-    }
+
     public void restartLevel(){
         currentLevel = 1;
     }
@@ -143,5 +142,83 @@ public class Handler implements Commons{
 
     public LinkedList<Alien> getAliens() {
         return aliens;
+    }
+    public void menu() {
+        Menu menu = game.getMenu();
+        game.removeMouseListener(game.getCurrentMouseAdapter());
+        game.setCurrentMouseAdapter(menu);
+        game.addMouseListener(menu);
+        game.setGameState(new MenuState(menu));
+    }
+
+    public void endGame() {
+        game.removeMouseListener(game.getCurrentMouseAdapter());
+        if (highScore.isHighScore(getScore())) {
+            newHighScore();
+
+        }else {
+            EndGame endGameScreen = game.getEndGameScreen();
+            game.setCurrentMouseAdapter(endGameScreen);
+            game.addMouseListener(endGameScreen);
+            game.setGameState(new EndGameState(endGameScreen));
+        }
+    }
+
+    public void restartGame() {
+        spawn.resetAliensKilled();
+        player = new Player(100, 280, this);
+        setPlayer(player);
+        restartLevel();
+        restartObjects();
+    }
+
+    public void inGame() {
+        game.setGameState(new InGameState(this, game.getHud(), spawn));
+    }
+
+    public void increaseLevel(int level) {
+        LevelUp levelUpScreen = game.getLevelUpScreen();
+        game.removeMouseListener(game.getCurrentMouseAdapter());
+        game.setCurrentMouseAdapter(levelUpScreen);
+        game.addMouseListener(levelUpScreen);
+        game.setGameState(new LevelUpState(levelUpScreen, level));
+    }
+    public void newHighScore(){
+        NewHighScore newHighScore = game.getNewHighScoreScreen();
+        game.removeMouseListener(game.getCurrentMouseAdapter());
+        new NameTextField(200, 80, this, getScore());
+        game.setCurrentMouseAdapter(newHighScore);
+        game.addMouseListener(newHighScore);
+        game.setGameState(new NewHighScoreState(newHighScore));
+        game.getWindow().requestFocus();
+    }
+    public void ranking(){
+        Ranking ranking = game.getRanking();
+        game.removeMouseListener(game.getCurrentMouseAdapter());
+        game.setCurrentMouseAdapter(ranking);
+        game.addMouseListener(ranking);
+        game.setGameState(new RankingState(ranking, highScore));
+    }
+
+    public void winGame() {
+        game.removeMouseListener(game.getCurrentMouseAdapter());
+        if (highScore.isHighScore(getScore())) {
+           newHighScore();
+        }else {
+            GameWon gameWonScreen = game.getGameWonScreen();
+            game.setCurrentMouseAdapter(gameWonScreen);
+            game.addMouseListener(gameWonScreen);
+            game.setGameState(new GameWonState(gameWonScreen));
+        }
+    }
+
+    public void newHighScore(String name, int score) {
+        highScore.addScoreToRanking(new Score(name, score));
+        highScore.addToFile();
+    }
+
+    public void pause(boolean pause){
+        game.setPaused(pause);
+
     }
 }

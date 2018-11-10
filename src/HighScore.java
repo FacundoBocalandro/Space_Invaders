@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HighScore {
-    public static String fileName = "C:\\Users\\Hard Core Computing\\Desktop\\Space_Invaders\\src\\Ranking";
+    public static String fileName = ".\\src\\Ranking";
     List<Score> ranking;
     private static String delimiter = "-";
     public HighScore(){
@@ -54,6 +54,7 @@ public class HighScore {
         ranking.remove(9);
     }
     public void addScoreToRanking(Score score){
+        if (ranking.size() == 10){deleteLastScoreFromFile();}
         ranking.add(score);
         sortRanking();
         for (int i = 0; i < ranking.size(); i++) {
@@ -70,5 +71,22 @@ public class HighScore {
 
         }
         return score > ranking.get(rankingSize - 1).getPoints();
+    }
+    public List<String> getHighScores() {
+        BufferedReader Reader;
+        FileReader rankingReader;
+        List<String> result = new ArrayList<>();
+        try {
+            rankingReader = new FileReader(fileName);
+            Reader = new BufferedReader(rankingReader);
+            String strCurrentLine;
+
+            while ((strCurrentLine = Reader.readLine()) != null) {
+                result.add(strCurrentLine);
+            }
+        } catch (IOException e) {
+            System.out.println("File not Found");
+        }
+        return result;
     }
 }

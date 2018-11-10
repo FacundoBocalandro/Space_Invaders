@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.image.BufferStrategy;
 
+
 public class SpaceInvaders extends Canvas implements Runnable, Commons {
     int width = BOARD_WIDTH;
     int height = BOARD_HEIGHT;
@@ -15,12 +16,13 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
     private EndGame endGameScreen;
     private MouseAdapter currentMouseAdapter;
     private Player player;
-    private HighScore highScore;
+    private NewHighScore newHighScoreScreen;
+    private Ranking rankingScreen;
     private boolean running = false;
-    Canvas window;
+    JFrame window;
     public GameState state;
     private GameWon gameWonScreen;
-    private NewHighScore newHighScoreScreen;
+    public boolean isPaused;
 
     public SpaceInvaders() {
         handler = new Handler(this);
@@ -31,22 +33,20 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
         spawn = new Spawn(handler);
         handler.setSpawn(spawn);
         hud = new HUD(handler);
-        menu = new Menu(this);
+        menu = new Menu(handler);
+        state = new MenuState(menu);
+        levelUpScreen = new LevelUp(handler);
+        endGameScreen = new EndGame(handler);
+        gameWonScreen = new GameWon(handler);
+        newHighScoreScreen = new NewHighScore(handler);
+        rankingScreen = new Ranking(handler);
         currentMouseAdapter = menu;
-        state = new MenuState(menu);
-        levelUpScreen = new LevelUp(this, handler);
-        endGameScreen = new EndGame(this);
-        gameWonScreen = new GameWon(this);
-        newHighScoreScreen = new NewHighScore(this);
-        highScore = new HighScore();
-        state = new MenuState(menu);
         this.addMouseListener(currentMouseAdapter);
         this.addKeyListener(new KeyInput(handler));
         this.addKeyListener(new KeyShotInput(handler));
 
 
         window = new StartGameWindow(width, height, this, "Space Invaders");
-
 
     }
 
@@ -62,7 +62,9 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1) {
-                tick();
+                if (!isPaused) {
+                    tick();
+                }
                 delta--;
             }
             if (running) {
@@ -125,56 +127,49 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
     public void setGameState(GameState state) {
         this.state = state;
     }
-
-    public void menu() {
-        this.removeMouseListener(currentMouseAdapter);
-        currentMouseAdapter = menu;
-        this.addMouseListener(currentMouseAdapter);
-        setGameState(new MenuState(menu));
+    public void setCurrentMouseAdapter(MouseAdapter currentMouseAdapter) {
+        this.currentMouseAdapter = currentMouseAdapter;
     }
 
-    public void endGame() {
-        this.removeMouseListener(currentMouseAdapter);
-        if (highScore.isHighScore(handler.getScore())) {
-            currentMouseAdapter = newHighScoreScreen;
-            this.addMouseListener(currentMouseAdapter);
-            setGameState(new NewHighScoreState(newHighScoreScreen));
-        } else {
-            currentMouseAdapter = endGameScreen;
-            this.addMouseListener(currentMouseAdapter);
-            setGameState(new EndGameState(endGameScreen));
-        }
+    public Menu getMenu() {
+        return menu;
     }
 
-    public void restartGame() {
-        spawn.resetAliensKilled();
-        player = new Player(100, 280, handler);
-        handler.setPlayer(player);
-        handler.restartLevel();
-        handler.restartObjects();
+    public LevelUp getLevelUpScreen() {
+        return levelUpScreen;
     }
 
-    public void inGame() {
-        setGameState(new InGameState(handler, hud, spawn));
+    public EndGame getEndGameScreen() {
+        return endGameScreen;
     }
 
-    public void increaseLevel(int level) {
-        this.removeMouseListener(currentMouseAdapter);
-        currentMouseAdapter = levelUpScreen;
-        this.addMouseListener(currentMouseAdapter);
-        setGameState(new LevelUpState(levelUpScreen, level));
+    public MouseAdapter getCurrentMouseAdapter() {
+        return currentMouseAdapter;
+    }
+
+    public NewHighScore getNewHighScoreScreen() {
+        return newHighScoreScreen;
+    }
+
+    public GameWon getGameWonScreen() {
+        return gameWonScreen;
+    }
+
+    public HUD getHud() {
+        return hud;
+    }
+
+    public Ranking getRanking(){return rankingScreen; }
+
+    public JFrame getWindow() {
+        return window;
+    }
+    public void setPaused(boolean isPaused){
+        this.isPaused = isPaused;
     }
 
     public static void main(String[] args) {
         new SpaceInvaders();
     }
-
-    public void winGame() {
-        this.removeMouseListener(currentMouseAdapter);
-        currentMouseAdapter = gameWonScreen;
-        this.addMouseListener(currentMouseAdapter);
-        setGameState(new GameWonState(gameWonScreen));
-    }
-
 
 }

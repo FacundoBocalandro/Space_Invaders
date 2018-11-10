@@ -3,12 +3,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class LevelUp extends MouseAdapter implements MouseOver {
-    SpaceInvaders game;
     Handler handler;
     int continueX = 95, buttonWidth = 150, buttonHeight = 40, continueY = 150;
 
-    public LevelUp(SpaceInvaders game, Handler handler) {
-        this.game = game;
+    public LevelUp(Handler handler) {
         this.handler = handler;
     }
 
@@ -20,7 +18,7 @@ public class LevelUp extends MouseAdapter implements MouseOver {
         int my = e.getY();
         if (mouseOver(mx, my, continueX, continueY, buttonWidth, buttonHeight)){
             handler.restartObjects();
-            game.inGame();
+            handler.inGame();
 
         }
     }

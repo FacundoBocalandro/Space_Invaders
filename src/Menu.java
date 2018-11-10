@@ -3,10 +3,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Menu extends MouseAdapter implements Commons, MouseOver{
-    int buttonX = 95, buttonWidth = 150, buttonHeight = 40, playY = 100, colorY = 150, quitY = 200;
-    private SpaceInvaders game;
-    public Menu(SpaceInvaders game){
-        this.game = game;
+    int buttonX = 95, buttonWidth = 150, buttonHeight = 40, playY = 100, highscoreY = 150, quitY = 200;
+    Handler handler;
+    public Menu(Handler handler){
+        this.handler = handler;
     }
 
     public void mousePressed(MouseEvent e){
@@ -14,7 +14,11 @@ public class Menu extends MouseAdapter implements Commons, MouseOver{
         int my = e.getY();
         //Play Button
         if(mouseOver(mx, my, buttonX, playY, buttonWidth, buttonHeight)){
-            game.inGame();
+            handler.inGame();
+        }
+        // Highscore button
+        if (mouseOver(mx, my, buttonX, highscoreY, buttonWidth, buttonHeight)){
+            handler.ranking();
         }
         //Quit Button
         if (mouseOver(mx, my, buttonX, quitY, buttonWidth, buttonHeight)){
@@ -31,7 +35,7 @@ public class Menu extends MouseAdapter implements Commons, MouseOver{
         g.setColor(Color.green);
         g.fillRect(buttonX, playY, buttonWidth, buttonHeight);
         g.setColor(Color.red);
-        g.fillRect(buttonX, colorY, buttonWidth,buttonHeight);
+        g.fillRect(buttonX, highscoreY, buttonWidth,buttonHeight);
         g.setColor(Color.blue);
         g.fillRect(buttonX, quitY, buttonWidth,buttonHeight);
         Font font = new Font("arial", 1, 25);

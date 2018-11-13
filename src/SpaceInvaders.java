@@ -22,7 +22,6 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
     JFrame window;
     public GameState state;
     private GameWon gameWonScreen;
-    public boolean isPaused;
 
     public SpaceInvaders() {
         handler = new Handler(this);
@@ -62,9 +61,7 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1) {
-                if (!isPaused) {
-                    tick();
-                }
+                tick();
                 delta--;
             }
             if (running) {
@@ -164,12 +161,16 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
     public JFrame getWindow() {
         return window;
     }
-    public void setPaused(boolean isPaused){
-        this.isPaused = isPaused;
+    public void pause (){
+        state.pause();
+    }
+    public boolean isPaused(){
+        return state.isPaused();
     }
 
     public static void main(String[] args) {
         new SpaceInvaders();
     }
+
 
 }

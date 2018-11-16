@@ -14,17 +14,15 @@ public class Player extends GameObject implements Commons{
     int succesfulShots;
     boolean powerActivated;
     int numberOfTicks;
-    int numberOfTicksWithPower;
+    long initialPowerTime;
 
     public Player(int x, int y, Handler handler) {
         super(x, y, handler, "images/player.png");
         lives = 3;
         score = 0;
-        //state = new NormalPlayer();
         state = new NormalPlayer();
         powerActivated = false;
         numberOfTicks = 0;
-        numberOfTicksWithPower = 0;
 
     }
 
@@ -38,14 +36,11 @@ public class Player extends GameObject implements Commons{
             state.move(x);
         }
         collides();
-        state.freezeAliens(handler);
         if (powerActivated){
-            numberOfTicksWithPower ++;
-            if (numberOfTicksWithPower == 1500){
+            long timeWithPower = System.currentTimeMillis() - initialPowerTime;
+            if (timeWithPower >= 4000){
                 state.deactivate(this, handler);
-                powerActivated = false;
                 System.out.println("deactivated");
-                numberOfTicksWithPower = 0;
             }
 
         }
@@ -107,8 +102,8 @@ public class Player extends GameObject implements Commons{
                 System.out.println("Double Shot");
             }
                 setState(newState);
-                newState.activate(handler, this);
                 powerActivated = true;
+                initialPowerTime = System.currentTimeMillis();
 
         }
     }
@@ -117,8 +112,10 @@ public class Player extends GameObject implements Commons{
     }
     public void setNormalPlayer(){
         setState(new NormalPlayer());
+        powerActivated = false;
     }
     public void setState(PlayerState state){
         this.state = state;
+        state.activate(handler, this);
     }
 }

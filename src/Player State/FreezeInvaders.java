@@ -1,6 +1,5 @@
 public class FreezeInvaders implements PlayerState {
-    @Override
-    public void freezeAliens(Handler handler) {
+    public void activate(Handler handler, Player player) {
         handler.freezeAliens();
     }
     public void deactivate(Player player,Handler handler){

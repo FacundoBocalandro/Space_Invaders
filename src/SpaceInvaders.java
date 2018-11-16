@@ -169,6 +169,8 @@ public class SpaceInvaders extends Canvas implements Runnable, Commons {
     }
 
     public static void main(String[] args) {
+
+
         new SpaceInvaders();
     }
 

@@ -13,7 +13,7 @@ public class PlayerShot extends Shot{
     }
     public void tick(){
         numberOfTicks ++;
-        if (numberOfTicks % 3 == 0) {
+        if (numberOfTicks % 5 == 0) {
             setY(y += speedY);
         }
         collision();
